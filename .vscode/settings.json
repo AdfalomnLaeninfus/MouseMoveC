@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "conio.h": "c",
+        "conio_s.h": "c",
+        "corecrt_stdio_config.h": "c",
+        "corecrt.h": "c",
+        "_mingw.h": "c",
+        "_mingw_mac.h": "c",
+        "_mingw_secapi.h": "c",
+        "math.h": "c"
+    }
+}
