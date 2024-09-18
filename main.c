@@ -1,59 +1,72 @@
-#include <math.h>
 #include <time.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #ifdef _WIN32
     #include <windows.h>
 #else
-    #error "This program only works on Windows!"
+    #error "Program dont work on another OS, perhaps on windows!"
 #endif
 
-typedef struct {
-    float x, y;
+typedef struct vec2 {
+    float x;
+    float y;
 } Vec2;
 
-int main() {
-    INPUT input = {0};
+INPUT input;
+
+int main()
+{
+    int timer = 0, paused = 0;
+    int window_size_x = GetSystemMetrics(SM_CXSCREEN);
+    int window_size_y = GetSystemMetrics(SM_CYSCREEN);
+
+    SetThreadExecutionState(ES_CONTINUOUS | ES_AWAYMODE_REQUIRED | ES_SYSTEM_REQUIRED);
+
     input.mi.dwFlags = MOUSEEVENTF_MOVE;
     input.type = INPUT_MOUSE;
 
-    POINT last_pos = {0}, mouse_pos;
-    int paused = 0, time = 0;
-    int window_size_x = GetSystemMetrics(SM_CXSCREEN);
-    int window_size_y = GetSystemMetrics(SM_CYSCREEN);
+    POINT mouse_pos, last_pos = {0, 0};
 
     SetCursorPos(window_size_x / 2, window_size_y / 2);
     GetCursorPos(&last_pos);
 
-    while (1) {
+    while(1)
+    {
+        int x = window_size_x / 2;
+        int y = window_size_y / 2;
+
         GetCursorPos(&mouse_pos);
-        int x = window_size_x / 2 + cos(time * 0.013) * 200;
-        int y = window_size_y / 2 + sin(time * 0.013) * 200;
 
         if (mouse_pos.x != last_pos.x || mouse_pos.y != last_pos.y) {
             paused = 1;
-            time = 0;
+            timer = 0;
         }
 
-        if (paused && time < 1000) {
+        if (paused && timer < 500) {
             GetCursorPos(&last_pos);
-            Sleep(25);
-            time++;
+            Sleep(16);
+            timer++;
+
             continue;
         }
 
-        if (time % 200 == 0) {
+        if (timer % 100 == 0) {
             SendInput(1, &input, sizeof(INPUT));
         }
 
         paused = 0;
+
+        x += cos(timer / 60.0) * 200;
+        y += sin(timer / 60.0) * 200;
+
         SetCursorPos(x, y);
         last_pos.x = x;
         last_pos.y = y;
 
-        time++;
-        Sleep(25);
+        timer++;
+        Sleep(16);
     }
 
     return 0;
