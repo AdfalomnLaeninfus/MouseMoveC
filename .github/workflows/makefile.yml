@@ -14,7 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: configure
+    - name: Generate configure script
+      run: |
+        aclocal
+        autoconf
+        automake --add-missing
+
+    - name: Configure
       run: ./configure
 
     - name: Install dependencies
